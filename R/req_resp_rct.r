@@ -1,4 +1,64 @@
-
+#' Required Responders for GO decision RCT
+#'
+#' Function for calculating the minimum required number of responders in the
+#' experimental group to make a GO decision in Settings 3 and 4.
+#'
+#' @param N_c Sample Size in the control group.
+#'
+#' @param N_e Sample Size in the experimental group.
+#'
+#' @param delta Required superiority to make a "GO" decision. Corresponds to \eqn{\delta}.
+#'
+#' @param confidence Required confidence to make "GO" decision. Corresponds to \eqn{\gamma}{\gamma}.
+#'
+#' @param e_a Alpha parameter of Beta Prior Distribution for the experimental response rate.
+#'            Corresponds to \eqn{\alpha_e}{\alpha e}. Default is \eqn{\frac{1}{2}}{1/2}.
+#'
+#' @param e_b Beta parameter of Beta Prior Distribution for the experimental response rate.
+#'            Corresponds to \eqn{\beta_e}{\beta e}. Default is \eqn{\frac{1}{2}}{1/2}.
+#'
+#' @param c_a Alpha parameter of Beta Prior Distribution for the control response rate.
+#'            Corresponds to \eqn{\alpha_c}{\alpha c}. Default is \eqn{\frac{1}{2}}{1/2}.
+#'
+#' @param c_b Beta parameter of Beta Prior Distribution for the control response rate.
+#'            Corresponds to \eqn{\beta_c}{\beta c}. Default is \eqn{\frac{1}{2}}{1/2}.
+#'
+#' @param h_a Alpha parameter of Beta Prior Distribution for the historical control response rate.
+#'            Corresponds to \eqn{\alpha_h}{\alpha h}. Only needs to be specified, if RR_h, N_h
+#'            and w are also specified. Default is \eqn{\frac{1}{2}}{1/2}.
+#'
+#' @param h_b Beta parameter of Beta Prior Distribution for the historical control response rate.
+#'            Corresponds to \eqn{\beta_h}{\beta h}. Only needs to be specified, if RR_h, N_h and w
+#'            are also specified. Default is \eqn{\frac{1}{2}}{1/2}.
+#'
+#' @param RR_h Historical control response rate. Corresponds to \eqn{p_h}{p h}.
+#'             If specified together with N_h and w, function will use setting 4 from pdf.
+#'
+#' @param N_h Historical control sample size. Corresponds to \eqn{n_h}{n h}.
+#'            If specified together with RR_h and w, function will use setting 4 from pdf.
+#'
+#' @param w Level of dynmaic borrowing. Corresponds to \eqn{w}{w}.
+#'
+#' @param plot Plots yes or no. Default is TRUE.
+#'
+#' @return Matrix containing pairs of successes in control group and respective required successes in experimental group.
+#'
+#' @examples
+#'
+#' # Setting 3
+#' req_resp_rct(
+#'   N_c = 25, N_e = 25,
+#'   delta = 0.08, confidence = 0.6
+#' )
+#'
+#' # Setting 4
+#' req_resp_rct(
+#'   N_c = 25, N_e = 25,
+#'   delta = 0.08, confidence = 0.6,
+#'   RR_h = 0.5, N_h = 50, w = 0.3
+#' )
+#'
+#' @export
 req_resp_rct <- function(N_c, N_e, delta, confidence, e_a=0.5, e_b=0.5, c_a=0.5, c_b=0.5,
                          h_a=0.5, h_b=0.5, RR_h=NULL, N_h=NULL, w=NULL, plot=T){
 
@@ -15,9 +75,9 @@ req_resp_rct <- function(N_c, N_e, delta, confidence, e_a=0.5, e_b=0.5, c_a=0.5,
       e_b_temp <- e_b + N_e
 
       a <- try(
-        while(integrate(function(y) { dbeta(y, e_a_temp, e_b_temp)*
+        while(stats::integrate(function(y) {stats::dbeta(y, e_a_temp, e_b_temp)*
             sapply(y, function(y) {
-              pbeta(y-delta, c_a_new, c_b_new)
+              stats::pbeta(y-delta, c_a_new, c_b_new)
             })
         }, delta, 1)$value <= confidence){
           e_a_temp <- e_a + crit
@@ -59,9 +119,9 @@ req_resp_rct <- function(N_c, N_e, delta, confidence, e_a=0.5, e_b=0.5, c_a=0.5,
       e_b_temp <- e_b + N_e
 
       a <- try(
-        while(integrate(function(y) { dbeta(y, e_a_temp, e_b_temp)*
+        while(stats::integrate(function(y) {stats::dbeta(y, e_a_temp, e_b_temp)*
             sapply(y, function(y) {
-              pbeta(y-delta, m_a, m_b)
+              stats::pbeta(y-delta, m_a, m_b)
             })
         }, delta, 1)$value <= confidence){
           e_a_temp <- e_a + crit

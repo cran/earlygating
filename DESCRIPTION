@@ -1,7 +1,7 @@
 Package: earlygating
 Type: Package
 Title: Properties of Bayesian Early Gating Designs
-Version: 1.0
+Version: 1.1
 Authors@R: person("Elias Laurin", "Meyer", email = "elias.meyer@meduniwien.ac.at",
                   role = c("aut", "cre"))
 Author: Elias Laurin Meyer [aut, cre]
@@ -15,9 +15,9 @@ Description: Computes the most important properties of four 'Bayesian' early gat
 Depends: R (>= 3.3.0)
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Imports: doParallel, betareg, foreach, parallel
+RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2018-08-30 13:51:22 UTC; elias
+Packaged: 2021-05-18 09:56:50 UTC; Elias
 Repository: CRAN
-Date/Publication: 2018-08-30 14:10:03 UTC
+Date/Publication: 2021-05-18 11:50:02 UTC
